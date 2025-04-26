@@ -10,7 +10,7 @@ It recovers deleted messages of a group if you are admin and if they were delete
 3. A Create new application. Fill in your application details. There is no need to enter any URL, and only the first two fields (App title and Short name) can be changed later.
 4. Click on Create application. Your API hash is secret and Telegram won’t let you revoke it. Don’t post it anywhere!
 
-## .env
+## Create a .env file with
 
 - `TELEGRAM_ID`: Telegram api_id generated in the previous section 
 - `TELEGRAM_HASH`: Telegram api_hash generated in the previous section
