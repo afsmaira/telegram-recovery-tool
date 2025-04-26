@@ -18,7 +18,7 @@ It recovers deleted messages of a group if you are admin and if they were delete
 - `TELEGRAM_GROUP`: Name of Telegram group you want to recover the messages. If the next value is given, it must be omitted.
 - `TELEGRAM_GROUP_USERNAME`: Username of Telegram group you want to recover the messages. If the previous value is given, it must be omitted.
 
-## ToDo
+## Next improvments coming soon...
 
 1. Organize and optimize source
 2. Merge backuped and recovered messages
