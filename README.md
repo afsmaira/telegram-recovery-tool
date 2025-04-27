@@ -1,5 +1,5 @@
 # telegram-recovery-tool
-It recovers deleted messages of a group if you are admin and if they were deleted less then 24h ago and generates a file with both the deleted and not deleted messages, ordered in time order.
+It recovers deleted messages of a group if you are admin and if they were deleted less then 48h ago and generates a file with both the deleted and not deleted messages, ordered in time order.
 
 ## In development...
 
@@ -10,7 +10,7 @@ It recovers deleted messages of a group if you are admin and if they were delete
 3. A Create new application. Fill in your application details. There is no need to enter any URL, and only the first two fields (App title and Short name) can be changed later.
 4. Click on Create application. Your API hash is secret and Telegram won’t let you revoke it. Don’t post it anywhere!
 
-## .env
+## Create a .env file with
 
 - `TELEGRAM_ID`: Telegram api_id generated in the previous section 
 - `TELEGRAM_HASH`: Telegram api_hash generated in the previous section
@@ -18,7 +18,7 @@ It recovers deleted messages of a group if you are admin and if they were delete
 - `TELEGRAM_GROUP`: Name of Telegram group you want to recover the messages. If the next value is given, it must be omitted.
 - `TELEGRAM_GROUP_USERNAME`: Username of Telegram group you want to recover the messages. If the previous value is given, it must be omitted.
 
-## ToDo
+## Next improvements coming soon...
 
 1. Fix the warning due to no close connection
 2. Make a better output for .md files
