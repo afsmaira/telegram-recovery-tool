@@ -27,9 +27,9 @@ class Message:
         return f'{self.datetime} {self.sender}\n\n' + \
             (self.message['text']+'\n\n'
              if self.message['text'] is not None else '') + \
-            ((self.message['media_file']
+            ((f'[Arquivo]({self.message['media_file']})'
               if not self.message['media_file'].endswith('jpg')
-              else '![]('+self.message['media_file']+')')+'\n\n'
+              else f'![]({self.message['media_file']})')+'\n\n'
             if self.message['media_file'] is not None else '')
 
 class Telegram:
