@@ -20,6 +20,6 @@ It recovers deleted messages of a group if you are admin and if they were delete
 
 ## ToDo
 
-1. Organize and optimize source
-2. Merge backuped and recovered messages
-3. Make output feature for formats like html, md, pdf, etc
+1. Fix the warning due to no close connection
+2. Make a better output for .md files
+3. Make other output files as html, pdf, etc
