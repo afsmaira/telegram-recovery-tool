@@ -20,6 +20,5 @@ It recovers deleted messages of a group if you are admin and if they were delete
 
 ## Next improvements coming soon...
 
-1. Fix the warning due to no close connection
-2. Make a better output for .md files
-3. Make other output files as html, pdf, etc
+1. Make a better output for .md files
+2. Make other output files as html, pdf, etc

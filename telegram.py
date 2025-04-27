@@ -56,8 +56,6 @@ class Telegram:
         self.backuped = []
         self.full_messages = []
 
-        self.client.loop.run_until_complete(self.setup())
-
     async def connect(self):
         await self.client.start(self.phone_number)
 
@@ -79,7 +77,7 @@ class Telegram:
             if self.verbose:
                 print(f'Group not found... {self.group_name}')
 
-    async def backup_group(self, filename='backup.json'):
+    async def backup(self, filename='backup.json'):
         if os.path.exists(filename):
             if self.overwrite:
                 os.remove(filename)
@@ -121,10 +119,7 @@ class Telegram:
         if self.verbose:
             print(f"✅ Backup completed! {len(self.backuped)} messages saved.")
 
-    def backup(self, filename='backup.json'):
-        self.client.loop.run_until_complete(self.backup_group(filename))
-
-    async def get_deleted(self, filename='recovered.json'):
+    async def recover(self, filename='recovered.json'):
         if os.path.exists(filename):
             if self.overwrite:
                 os.remove(filename)
@@ -174,9 +169,6 @@ class Telegram:
             json.dump(self.recovered, fp)
         if self.verbose:
             print(f"✅ Recovery completed! {len(self.recovered)} messages recovered.")
-
-    def recover(self, filename='recovered.json'):
-        self.client.loop.run_until_complete(self.get_deleted(filename))
 
     def merge(self, rec_filename='recovered.json', backup_filename='backup.json', out_type='md'):
         if len(self.recovered) == 0:

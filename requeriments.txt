@@ -2,3 +2,4 @@ python-dotenv
 telethon
 json
 datetime
+asyncio
