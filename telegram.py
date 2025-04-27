@@ -24,13 +24,32 @@ class Message:
         return self.datetime < other.datetime
 
     def __str__(self):
-        return f'{self.datetime} {self.sender}\n\n' + \
-            (self.message['text']+'\n\n'
-             if self.message['text'] is not None else '') + \
-            ((f'[Arquivo]({self.message['media_file']})'
-              if not self.message['media_file'].endswith('jpg')
-              else f'![]({self.message['media_file']})')+'\n\n'
-            if self.message['media_file'] is not None else '')
+        # datetime: sender
+        r = f'{self.datetime}: {self.sender}\n\n'
+        # Text message if exists
+        if self.message['text'] is not None:
+            r += self.message['text']+'\n\n'
+        # File link or image renderize if exists
+        if self.message['media_file'] is not None:
+            if self.message['media_file'].endswith('jpg') or \
+                    self.message['media_file'].endswith('png'):
+                r += f'![]({self.message['media_file']})'
+            else:
+                r += f'[Arquivo]({self.message['media_file']})'
+            r += '\n\n'
+        # Location if exists
+        if self.message['geo'] is not None:
+            r += f'''Location\n            
+- Latitude: {self.message["geo"]['lat']}\n
+- Longitude: {self.message["geo"]['long']}\n
+'''
+        # Poll if exists
+        if self.message['poll'] is not None:
+            r += self.message['poll']['question']+'\n\n'
+            for a in self.message['poll']['answers']:
+                r += f"{a['option']}) {a['text']} ({self.message['poll']['votes'][a['option']]} votes)\n\n"
+        return r
+
 
 class Telegram:
     def __init__(self, api_id: int = 0, api_hash: str = None, phone: str = None,
@@ -101,7 +120,6 @@ class Telegram:
             },
             "datetime": datetime.fromtimestamp(message.date.timestamp(), UTC).isoformat(),
             "text": getattr(message, 'text', ''),
-            "has_media": has_media,
             "media_file": None,
             "poll": None if poll_question is None else {
                 "question": poll_question,
