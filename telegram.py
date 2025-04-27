@@ -77,6 +77,63 @@ class Telegram:
             if self.verbose:
                 print(f'Group not found... {self.group_name}')
 
+    async def message2dict(self, message, log=None):
+        has_media = bool(message.media)
+        poll_question = poll_ans = poll_votes = None
+        curr_poll = message.poll
+        if curr_poll:
+            poll_question = curr_poll.poll.question.text
+            poll_ans = [{'option': a.option.decode(), 'text': a.text.text}
+                        for a in curr_poll.poll.answers]
+            poll_votes = {a.option.decode(): a.voters
+                          for a in curr_poll.results.results}
+        geo_lat = geo_long = None
+        curr_geo = message.geo
+        if curr_geo:
+            geo_lat = curr_geo.geo.lat
+            geo_long = curr_geo.geo.long
+
+        message_entry = {
+            "id": message.id,
+            "sender": {
+                "id": message.sender_id,
+                "name": message.sender.first_name if message.sender else "Unknown"
+            },
+            "datetime": datetime.fromtimestamp(message.date.timestamp(), UTC).isoformat(),
+            "text": getattr(message, 'text', ''),
+            "has_media": has_media,
+            "media_file": None,
+            "poll": None if poll_question is None else {
+                "question": poll_question,
+                "answers": poll_ans,
+                "votes": poll_votes
+            },
+            "geo": None if geo_lat is None else {
+                "lat": geo_lat, "long": geo_long
+            }
+        }
+
+        if has_media:
+            file_name = f"media/{message.id}_{message.date.strftime('%Y%m%d')}"
+            file_path = await self.client.download_media(message, file=file_name)
+            message_entry["media_file"] = file_path
+
+        if log is None:
+            return message_entry
+
+        rm_by = (await self.client.get_entity(log.user_id)).first_name
+
+        entry = {
+            "event": {
+                "type": "message_deleted",
+                "deleted_by": {"id": log.user_id, "name": rm_by},
+                "datetime": datetime.fromtimestamp(log.date.timestamp(), UTC).isoformat()
+            },
+            "message": message_entry
+        }
+
+        return entry
+
     async def backup(self, filename='backup.json'):
         if os.path.exists(filename):
             if self.overwrite:
@@ -93,25 +150,7 @@ class Telegram:
                     print(n, 'messages already saved!')
                 with open(filename, 'w', encoding=self.encoding) as fp:
                     json.dump(self.backuped, fp)
-            has_media = bool(message.media)
-            message_entry = {
-                "id": message.id,
-                "sender": {
-                    "id": message.sender_id,
-                    "name": message.sender.first_name if message.sender else "Unknown"
-                },
-                "datetime": datetime.fromtimestamp(message.date.timestamp(), UTC).isoformat(),
-                "text": message.text,
-                "has_media": has_media,
-                "media_file": None
-            }
-
-            if has_media:
-                file_name = f"media/{message.id}_{message.date.strftime('%Y%m%d')}"
-                file_path = await self.client.download_media(message, file=file_name)
-                message_entry["media_file"] = file_path
-
-            self.backuped.append(message_entry)
+            self.backuped.append(await self.message2dict(message))
 
         with open(filename, 'w', encoding=self.encoding) as f:
             json.dump(self.backuped, f, ensure_ascii=False)
@@ -137,33 +176,7 @@ class Telegram:
                 with open(filename, 'w', encoding=self.encoding) as fp:
                     json.dump(self.recovered, fp)
             if log.action is not None and hasattr(log.action, 'message'):
-                sender = await self.client.get_entity(log.action.message.sender_id) \
-                    if hasattr(log.action.message, 'sender_id') else None
-                sender_name = sender.first_name if sender else "Unknown"
-                rm_by = (await self.client.get_entity(log.user_id)).first_name
-                has_media = bool(log.action.message.media)
-                entry = {
-                    "event": {
-                        "type": "message_deleted",
-                        "deleted_by": {"id": log.user_id, "name": rm_by},
-                        "datetime": datetime.fromtimestamp(log.date.timestamp(), UTC).isoformat()
-                    },
-                    "message": {
-                        "id": log.action.message.id,
-                        "text": getattr(log.action.message, 'text', ''),
-                        "sender": {"id": sender.id if sender else None, "name": sender_name},
-                        "datetime": datetime.fromtimestamp(log.action.message.date.timestamp(), UTC).isoformat(),
-                        "has_media": has_media,
-                        "media_file": None
-                    }
-                }
-
-                if has_media:
-                    file_name = f"media/{log.action.message.id}_{log.action.message.date.strftime('%Y%m%d')}"
-                    file_path = await self.client.download_media(log.action.message, file=file_name)
-                    entry['message']["media_file"] = file_path
-
-                self.recovered.append(entry)
+                self.recovered.append(await self.message2dict(log.action.message, log))
 
         with open(filename, 'w', encoding='utf-8') as fp:
             json.dump(self.recovered, fp)
