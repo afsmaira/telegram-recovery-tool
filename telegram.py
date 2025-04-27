@@ -20,6 +20,9 @@ class Message:
         if self.message['text'] is not None:
             self.message['text'] = re.sub(r'([^\n])```', r'\1\n```', self.message['text'])
 
+    def __contains__(self, item):
+        return item in self.message
+
     def __lt__(self, other):
         return self.datetime < other.datetime
 
@@ -38,13 +41,13 @@ class Message:
                 r += f'[Arquivo]({self.message['media_file']})'
             r += '\n\n'
         # Location if exists
-        if self.message['geo'] is not None:
+        if 'geo' in self and self.message['geo'] is not None:
             r += f'''Location\n            
 - Latitude: {self.message["geo"]['lat']}\n
 - Longitude: {self.message["geo"]['long']}\n
 '''
         # Poll if exists
-        if self.message['poll'] is not None:
+        if 'poll' in self and self.message['poll'] is not None:
             r += self.message['poll']['question']+'\n\n'
             for a in self.message['poll']['answers']:
                 r += f"{a['option']}) {a['text']} ({self.message['poll']['votes'][a['option']]} votes)\n\n"
