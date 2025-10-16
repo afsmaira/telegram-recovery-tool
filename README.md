@@ -10,10 +10,10 @@ It recovers deleted messages of a group if you are admin and if they were delete
 3. A Create new application. Fill in your application details. There is no need to enter any URL, and only the first two fields (App title and Short name) can be changed later.
 4. Click on Create application. Your API hash is secret and Telegram won’t let you revoke it. Don’t post it anywhere!
 
-## Install dependencies
+## Install
 
-```
-python3 -m pip install -r requirements.txt
+```bash
+pip3 install git+https://github.com/afsmaira/telegram-recovery-tool.git
 ```
 
 ## Create a .env file with
@@ -26,9 +26,9 @@ python3 -m pip install -r requirements.txt
 
 ## Run
 
-Run `example.py` for default execution, which includes recover deleted messages, backup not deleted ones and merge all of them in a .md file.
+Run `telegramrec` for default execution, which includes recover deleted messages, backup not deleted ones and merge all of them in a .md file.
 
-## Next improvements coming soon...
+## Next improvements...
 
 1. Make a better output for .md files
 2. Make other output files as html, pdf, etc

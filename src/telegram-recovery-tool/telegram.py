@@ -27,8 +27,8 @@ class Message:
         return self.datetime < other.datetime
 
     def __str__(self):
-        # datetime: sender
-        r = f'{self.datetime}: {self.sender}\n\n'
+        # datetime - sender
+        r = f'{self.datetime} - {self.sender}\n\n'
         # Text message if exists
         if self.message['text'] is not None:
             r += self.message['text']+'\n\n'
