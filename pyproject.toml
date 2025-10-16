@@ -31,4 +31,4 @@ dependencies = [
 Homepage = "https://github.com/afsmaira/telegram-recovery-tool"
 
 [project.scripts]
-telegramrec = "photos2timelapse.main:main"
+telegramrec = "telegram-recovery-tool.main:main"
