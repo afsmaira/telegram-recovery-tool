@@ -5,7 +5,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "telegram-recovery-tool"
+name = "telegram_recovery_tool"
 version = "0.1.0"
 authors = [
     { name="André de Freitas Smaira", email="andre.smaira@gmail.com" },
@@ -31,4 +31,4 @@ dependencies = [
 Homepage = "https://github.com/afsmaira/telegram-recovery-tool"
 
 [project.scripts]
-telegramrec = "telegram-recovery-tool.main:main"
+telegramrec = "telegram_recovery_tool.main:main"
