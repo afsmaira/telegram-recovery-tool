@@ -3,6 +3,28 @@ import re
 from telethon.sync import TelegramClient
 import json
 from datetime import datetime, UTC
+from tqdm import tqdm
+
+class DownloadProgressBar:
+    def __init__(self, msg_id):
+        self.pbar = None
+        self.msg_id = msg_id
+
+    def __call__(self, received, total):
+        if not total:
+            return
+        if self.pbar is None:
+            self.pbar = tqdm(
+                total=total, 
+                unit='B', 
+                unit_scale=True, 
+                desc=f"Msg {self.msg_id}",
+                leave=False,
+                disable=False
+            )
+        self.pbar.update(received - self.pbar.n)
+        if received == total:
+            self.pbar.close()
 
 class Message:
     def __init__(self, message):
@@ -136,7 +158,20 @@ class Telegram:
 
         if has_media:
             file_name = f"media/{message.id}_{message.date.strftime('%Y%m%d')}"
-            file_path = await self.client.download_media(message, file=file_name)
+            
+            if not os.path.exists(file_name):
+                if self.verbose:
+                    print(f"📥 Baixando mídia da mensagem {message.id}...")
+                progress = DownloadProgressBar(message.id) if self.verbose else None
+                
+                file_path = await self.client.download_media(
+                    message, 
+                    file=file_name, 
+                    progress_callback=progress
+                )
+            else:
+                file_path = file_name
+                
             message_entry["media_file"] = file_path
 
         if log is None:
