@@ -23,6 +23,7 @@ pip3 install git+https://github.com/afsmaira/telegram-recovery-tool.git
 - `TELEGRAM_PHONE`: The phone you used to create your application in the previous section
 - `TELEGRAM_GROUP`: Name of Telegram group you want to recover the messages. If the next value is given, it must be omitted.
 - `TELEGRAM_GROUP_USERNAME`: Username of Telegram group you want to recover the messages. If the previous value is given, it must be omitted.
+- `SKIP_MEDIA`: If set to 1, the media files will not be downloaded. Default is 0. 
 
 ## Run
 

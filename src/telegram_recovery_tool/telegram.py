@@ -79,7 +79,7 @@ class Message:
 class Telegram:
     def __init__(self, api_id: int = 0, api_hash: str = None, phone: str = None,
                  group_name: str = None, group_id: str = None, encoding: str ='utf-8',
-                 verbose: bool = True, overwrite: bool = False):
+                 verbose: bool = True, overwrite: bool = False, skip_media: bool = False):
         if api_id == 0:
             raise Exception('API_ID not set')
         self.api_id = api_id
@@ -90,6 +90,7 @@ class Telegram:
         self.encoding = encoding
         self.verbose = verbose
         self.overwrite = overwrite
+        self.skip_media = skip_media
         self.client = TelegramClient('session',
                                      api_id=self.api_id,
                                      api_hash=self.api_hash)
@@ -122,7 +123,7 @@ class Telegram:
                 print(f'Group not found... {self.group_name}')
 
     async def message2dict(self, message, log=None):
-        has_media = bool(message.media)
+        has_media = bool(message.media) and not self.skip_media
         poll_question = poll_ans = poll_votes = None
         curr_poll = message.poll
         if curr_poll:

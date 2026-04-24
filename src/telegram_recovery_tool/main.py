@@ -14,7 +14,8 @@ async def amain():
     phone = os.getenv('TELEGRAM_PHONE')
     group_name = os.getenv('TELEGRAM_GROUP')
     group_id = os.getenv('TELEGRAM_GROUP_USERNAME')
-    tel = Telegram(api_id, api_hash, phone, group_name, group_id)
+    skip_media = os.getenv('SKIP_MEDIA', '0') == '1'
+    tel = Telegram(api_id, api_hash, phone, group_name, group_id, skip_media=skip_media)
     await tel.setup()
     await tel.recover()
     await tel.backup()
