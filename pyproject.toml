@@ -21,9 +21,7 @@ classifiers = [
 
 dependencies = [
     "python-dotenv",
-    "telethon",
-    "datetime",
-    "asyncio"
+    "telethon"
 ]
 
 [project.urls]
