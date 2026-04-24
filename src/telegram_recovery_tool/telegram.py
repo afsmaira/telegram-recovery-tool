@@ -205,6 +205,8 @@ class Telegram:
             print(f"✅ Recovery completed! {len(self.recovered)} messages recovered.")
 
     def merge(self, rec_filename='recovered.json', backup_filename='backup.json', out_type='md'):
+        if self.verbose:
+            print("Merging backuped and recovered messages...")
         if len(self.recovered) == 0:
             with open(rec_filename, 'r', encoding=self.encoding) as fp:
                 self.recovered = json.load(fp)
