@@ -94,8 +94,9 @@ class Telegram:
         self.client = TelegramClient('session',
                                      api_id=self.api_id,
                                      api_hash=self.api_hash)
-        if not os.path.exists("media"):
-            os.makedirs("media")
+        if not skip_media:
+            if not os.path.exists("media"):
+                os.makedirs("media")
 
         self.recovered = []
         self.backuped = []
