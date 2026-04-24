@@ -206,16 +206,22 @@ class Telegram:
 
     def merge(self, rec_filename='recovered.json', backup_filename='backup.json', out_type='md'):
         if self.verbose:
-            print("Merging backuped and recovered messages...")
+            print('Merging backuped and recovered messages...', flush=True)
         if len(self.recovered) == 0:
             with open(rec_filename, 'r', encoding=self.encoding) as fp:
                 self.recovered = json.load(fp)
         self.recovered = [Message(x) for x in self.recovered]
+        if self.verbose:
+            print(f'Added {len(self.recovered)} recovered messages', flush=True)
         if len(self.backuped) == 0:
             with open(backup_filename, 'r', encoding=self.encoding) as fp:
                 self.backuped = json.load(fp)
         self.backuped = [Message(x) for x in self.backuped]
+        if self.verbose:
+            print(f'Added {len(self.backuped)} backuped messages')
+            print('Merging now!', flush=True)
         self.full_messages = sorted(self.recovered + self.backuped)
+        print('✅ Merged!', flush=True)
 
     def to_md(self, filename='all.md'):
         self.merge()
