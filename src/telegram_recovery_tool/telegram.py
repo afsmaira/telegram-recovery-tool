@@ -112,8 +112,8 @@ class Telegram:
         geo_lat = geo_long = None
         curr_geo = message.geo
         if curr_geo:
-            geo_lat = curr_geo.geo.lat
-            geo_long = curr_geo.geo.long
+            geo_lat = getattr(curr_geo, 'lat', None)
+            geo_long = getattr(curr_geo, 'long', None)
 
         message_entry = {
             "id": message.id,
